@@ -255,3 +255,62 @@ public struct FanDeckOTPField: View {
         #endif
     }
 }
+
+// MARK: - Interactive Xcode Live Canvas Preview
+struct FanDeckOTPField_Previews: PreviewProvider {
+    struct DemoContainer: View {
+        @StateObject private var controller = FanDeckOTPController(length: 6)
+        @State private var isLoading = false
+        @State private var obscure = false
+
+        var body: some View {
+            VStack(spacing: 36) {
+                VStack(spacing: 8) {
+                    Text("FanDeckOTP Live Demo")
+                        .font(.title2.bold())
+                    Text("Type code or tap buttons below to test animations")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+
+                FanDeckOTPField(
+                    controller: controller,
+                    obscureText: obscure,
+                    isLoading: isLoading,
+                    autoFocus: true
+                )
+
+                Text("Entered: \(controller.text.isEmpty ? "None" : controller.text)")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+
+                HStack(spacing: 12) {
+                    Button("Error Shake") {
+                        controller.triggerError()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+
+                    Button("Clear") {
+                        controller.clear()
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button(obscure ? "Show PIN" : "Hide PIN") {
+                        obscure.toggle()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+            .padding(24)
+        }
+    }
+
+    static var previews: some View {
+        DemoContainer()
+            .preferredColorScheme(.dark)
+        DemoContainer()
+            .preferredColorScheme(.light)
+    }
+}
+
